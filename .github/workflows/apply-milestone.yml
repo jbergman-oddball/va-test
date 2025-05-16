@@ -38,13 +38,13 @@ jobs:
         # if: github.event.pull_request.merged == true
         run: |
           MILESTONE_TITLE=$(gh api "repos/jbergman-oddball/va-test/milestones" --jq  'map(.title) | sort | .[0]')
-          # if [[ -n "$LINKED_ISSUE_NUMBER" ]]; then
-          #   PR_NUM="${{ github.event.pull_request.number }}"
-          #   echo "Processing PR #$PR_NUM..."
-          # else
-          #   LINKED_ISSUE_NUM="${{ steps.extract_issue.outputs.linked_issue_number }}"
-          #   echo "Linked Issue Number: $LINKED_ISSUE_NUM"
-          # fi
+          if [[ -z "$LINKED_ISSUE_NUMBER" ]]; then
+            PR_NUM="${{ github.event.pull_request.number }}"
+            echo "Processing PR #$PR_NUM..."
+          else
+            LINKED_ISSUE_NUM="${{ steps.extract_issue.outputs.linked_issue_number }}"
+            echo "Linked Issue Number: $LINKED_ISSUE_NUM"
+          fi
 
           if [[ -n "$LINKED_ISSUE_NUM" ]]; then
             echo "Linked issue #$LINKED_ISSUE_NUM found. Adding milestone $MILESTONE_TITLE."
