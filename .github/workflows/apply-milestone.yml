@@ -21,16 +21,24 @@ jobs:
           PR_NUMBER="${{ github.event.pull_request.number }}"
           echo "PR Number is $PR_NUMBER"
           echo "pr_number=$PR_NUMBER" >> "$GITHUB_OUTPUT"
-
   get_issue_number:
     runs-on: ubuntu-latest
     steps:
-      - name: Get issue number
-        id: issue_number
+      - name: Extract Linked Issue Number for Milestone Update
+        id: extract_linked_issue
         run: |
-          ISSUE_NUMBER="${{ github.event.issue.number }}"
-          echo "Issue Number is $ISSUE_NUMBER"
-          echo "issue_number=$ISSUE_NUMBER" >> "$GITHUB_OUTPUT"
+          PR_BODY="${{ github.event.pull_request.body }}"
+          LINKED_ISSUE_NUMBER=""
+          if [[ "$PR_BODY" =~ [Cc]loses[[:space:]]?#([0-9]+)|[Ff]ixes[[:space:]]?#([0-9]+)|[Rr]esolves[[:space:]]?#([0-9]+) ]]; then
+            LINKED_ISSUE_NUMBER="${BASH_REMATCH[1]}${BASH_REMATCH[2]}${BASH_REMATCH[3]}"
+          fi
+          if [[ -z "$LINKED_ISSUE_NUMBER" ]]; then
+            echo "No linked issue found for merged PR #${{ github.event.pull_request.number }}. Skipping milestone update."
+            echo "linked_issue_number=" >> $GITHUB_OUTPUT
+          else
+            echo "Linked issue number for milestone: #$LINKED_ISSUE_NUMBER"
+            echo "linked_issue_number=$LINKED_ISSUE_NUMBER" >> $GITHUB_OUTPUT
+          fi
 
   # Noting the pr is merged
   # if_merged:
