@@ -38,7 +38,7 @@ jobs:
         # if: github.event.pull_request.merged == true
         run: |
           PR_NUM="${{ github.event.pull_request.number }}"
-          LINKED_ISSUE_NUM="${{ steps.extract_issue.outputs.linked_issue_number }}"
+          LINKED_ISSUE_NUM="${{ steps.extract_issue.outputs.linked_issue_number }}" || true
 
           echo "Processing PR #$PR_NUM..."
           echo "Linked Issue Number: $LINKED_ISSUE_NUM"
