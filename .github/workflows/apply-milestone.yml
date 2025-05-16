@@ -5,8 +5,11 @@ on:
   #     - main
   pull_request:
     types: [opened, edited, reopened, synchronize, labeled, unlabeled]
-  # paths: # targeting only code that touches the app
-  #   - VAMobile/src/**
+    # paths: # targeting only code that touches the app
+    #   - VAMobile/src/**
+
+    env:
+      GH_TOKEN: ${{ secrets.GH_ACTIONS_PAT }}
 
 jobs:
   get_pr_number:
