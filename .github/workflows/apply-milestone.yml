@@ -9,7 +9,7 @@ on:
     #   - VAMobile/src/**
 
     env:
-      GH_TOKEN: ${{ secrets.GH_ACTIONS_PAT }}
+      GH_TOKEN: "${{ secrets.GH_ACTIONS_PAT }}"
 
 jobs:
   get_pr_number:
