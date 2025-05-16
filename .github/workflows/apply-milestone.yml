@@ -22,6 +22,16 @@ jobs:
           echo "PR Number is $PR_NUMBER"
           echo "pr_number=$PR_NUMBER" >> "$GITHUB_OUTPUT"
 
+  get_issue_number:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Get issue number
+        id: issue_number
+        run: |
+          ISSUE_NUMBER="${{ github.event.issue.number }}"
+          echo "Issue Number is $ISSUE_NUMBER"
+          echo "issue_number=$ISSUE_NUMBER" >> "$GITHUB_OUTPUT"
+
   # Noting the pr is merged
   # if_merged:
   #   runs-on: ubuntu-latest
