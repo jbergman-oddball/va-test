@@ -47,8 +47,7 @@ jobs:
 
           if [[ -n "$LINKED_ISSUE_NUM" ]]; then
             echo "Linked issue #$LINKED_ISSUE_NUM found. Adding milestone."
-            MILESTONE_ID=$(gh api "repos/jbergman-oddball/va-test/milestones" \
-              --jq  'map(.number) | sort | .[-1]')
+            MILESTONE_ID=$(gh api "repos/jbergman-oddball/va-test/milestones" --jq  'map(.number) | sort | .[0]')
             echo "Setting milestone $MILESTONE_ID for issue #$LINKED_ISSUE_NUM"
             gh issue edit $LINKED_ISSUE_NUM --milestone $MILESTONE_ID
           else
