@@ -1,76 +1,56 @@
-name: "[Utils] Apply Milestone"
+name: Milestone Linker
+
 on:
-  # push:
-  #   branches:
-  #     - main
   pull_request:
-    types: [opened, edited, reopened, synchronize, labeled, unlabeled]
-  # paths: # targeting only code that touches the app
-  #   - VAMobile/src/**
+    types: [opened, edited, synchronize, closed] # Trigger on relevant PR events
 
 jobs:
-  get_pr_number:
+  process_pr_and_issue:
     runs-on: ubuntu-latest
-    steps:
-      - name: Get PR number
-        id: pr_number
-        run: |
-          PR_NUMBER="${{ github.event.pull_request.number }}"
-          echo "PR Number is $PR_NUMBER"
-          echo "pr_number=$PR_NUMBER" >> "$GITHUB_OUTPUT"
+    permissions:
+      contents: read
+      pull-requests: write
+      issues: write
 
-  # Noting the pr is merged
-  # if_merged:
-  #   runs-on: ubuntu-latest
-  #   if: github.event.pull_request.merged == true
-  #   steps:
-  #     - name: Print PR has been merged
-  #       run: |
-  #         echo "PR has been merged"
-  # # Check linked issue to PR
-  # check_linked_issue:
-  #   uses: ./.github/workflows/check-linked-issues.yml
-  #   id: linked_issue
-  # # Locate Milestone
-  locate_milestone:
-    # needs: if_merged
-    runs-on: ubuntu-latest
     steps:
-      - name: Install GH CLI
-        run: |
-          (type -p wget >/dev/null || (sudo apt update && sudo apt-get install wget -y)) \
-          	&& sudo mkdir -p -m 755 /etc/apt/keyrings \
-            && out=$(mktemp) && wget -nv -O$out https://cli.github.com/packages/githubcli-archive-keyring.gpg \
-            && cat $out | sudo tee /etc/apt/keyrings/githubcli-archive-keyring.gpg > /dev/null \
-          	&& sudo chmod go+r /etc/apt/keyrings/githubcli-archive-keyring.gpg \
-          	&& echo "deb [arch=$(dpkg --print-architecture) signed-by=/etc/apt/keyrings/githubcli-archive-keyring.gpg] https://cli.github.com/packages stable main" | sudo tee /etc/apt/sources.list.d/github-cli.list > /dev/null \
-          	&& sudo apt update \
-          	&& sudo apt install gh -y
-      - name: Auth to GH
-        run: |
-          echo "${{ secrets.GH_TOKEN }}" | gh auth login --with-token
-      - name: Get Milestones (Raw)
-        run: |
-          gh api /repos/jbergman-oddball/va-test/milestones --jq  '[.[] | select(.state == "open" and .due_on != null ) | {"milestone_number": .number, "version": .title, "due_on": .due_on}] | sort_by(.due_on)' > milestone.json
-          echo "milestone_file=milestone.json" >> $GITHUB_OUTPUT
-      - name: Print Version and Due Date
-        run: |
-          echo "Raw Output File:"
-          mnumber=$(cat milestone.json | jq '.[].milestone_number' | sort -u | head -n 1 | sed 's/^"//; s/"$//')
-          version=$(cat milestone.json | jq '.[].version' | sort -u | head -n 1 | sed 's/^"//; s/"$//')
-          due=$(cat milestone.json | jq '.[].due_on' | sort -u | head -n 1 | sed 's/^"//; s/"$//'| sed "s/T.*Z//g")
-          echo "Release Version $version due on $due is the current release. Milestone Number is $mnumber"
-  #
-  # #TODO apply milestone to issue
-  # apply_milesone:
-  #   needs: locate_milestone
-  #   runs-on: ubuntu-latest
-  #   steps:
-  #     - name: Applying milestone to issue
-  #       run: |
-  #         if ${{ steps.check-linked-issues.outputs.linked_issue }}:
-  #           gh issue edit ${{ steps.check-linked-issues.outputs.linked_issue }} --milestone $mnumber
-  #         else:
-  #           gh pr edit <pr> --milestone $mnumber
+      - name: Checkout code
+        uses: actions/checkout@v4
 
-#TODO check go-live workflow for milestone closing
+      - name: Extract Linked Issue Number from PR Body
+        id: extract_issue # ID for this step to reference its outputs
+        run: |
+          PR_BODY="${{ github.event.pull_request.body }}"
+          LINKED_ISSUE_NUMBER=""
+
+          if [[ "$PR_BODY" =~ ([Cc]loses|[Ff]ixes|[Rr]esolves)[[:space:]]?#([0-9]+) ]]; then
+            LINKED_ISSUE_NUMBER="${BASH_REMATCH[2]}"
+          fi
+
+          if [[ -z "$LINKED_ISSUE_NUMBER" ]]; then
+            echo "No explicit linked issue found in PR description for PR #${{ github.event.pull_request.number }}."
+            echo "linked_issue_number=" >> $GITHUB_OUTPUT
+          else
+            echo "Linked issue number found: #$LINKED_ISSUE_NUMBER"
+            echo "linked_issue_number=$LINKED_ISSUE_NUMBER" >> $GITHUB_OUTPUT
+          fi
+
+      - name: Conditional Action Add Milestone or Link PR
+        if: github.event.pull_request.merged == true
+        run: |
+          PR_NUM="${{ github.event.pull_request.number }}"
+          LINKED_ISSUE_NUM="${{ steps.extract_issue.outputs.linked_issue_number }}"
+
+          echo "Processing PR #$PR_NUM..."
+          echo "Linked Issue Number: $LINKED_ISSUE_NUM"
+
+          if [[ -n "$LINKED_ISSUE_NUM" ]]; then
+            echo "Linked issue #$LINKED_ISSUE_NUM found. Adding milestone."
+            MILESTONE_ID=$(gh api "repos/jbergman-oddball/va-test/milestones" \
+              --jq  '[.[].number sort_by(.number)'
+            echo "Setting milestone $MILESTONE_ID for issue #$LINKED_ISSUE_NUM"
+            gh issue edit $LINKED_ISSUE_NUM --milestone $MILESTONE_ID
+          else:
+            echo "Setting milestone $MILESTONE_ID" for PR $PR_NUM
+            gh pr edit $PR_NUM --milestone $MILESTONE_ID
+        env:
+          GH_TOKEN: ${{ secrets.GH_ACTIONS_PAT }}
