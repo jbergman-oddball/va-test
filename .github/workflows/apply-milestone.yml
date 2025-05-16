@@ -40,6 +40,7 @@ jobs:
           MILESTONE_TITLE=$(gh api "repos/jbergman-oddball/va-test/milestones" --jq  'map(.title) | sort | .[0]')
           if [[ -z "$LINKED_ISSUE_NUM" ]]; then
             PR_NUM="${{ github.event.pull_request.number }}"
+            echo "Linked Issue Number: $LINKED_ISSUE_NUM"
           else
             LINKED_ISSUE_NUM="${{ steps.extract_issue.outputs.linked_issue_number }}"
             echo "Linked Issue Number: $LINKED_ISSUE_NUM"
@@ -50,6 +51,7 @@ jobs:
             gh issue edit $LINKED_ISSUE_NUM --milestone $MILESTONE_TITLE
           else
             echo "Setting milestone $MILESTONE_TITLE" for PR $PR_NUM
+            echo "Linked Issue Number: $LINKED_ISSUE_NUM"
             echo "Processing PR #$PR_NUM..."
             gh pr edit $PR_NUM --milestone $MILESTONE_TITLE
           fi
