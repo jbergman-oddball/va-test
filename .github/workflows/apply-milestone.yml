@@ -1,6 +1,6 @@
 name: "[Utils] Apply Milestone"
 on:
-  # push:
+  push:
   #   branches:
   #     - main
   pull_request:
@@ -46,10 +46,9 @@ jobs:
           	&& echo "deb [arch=$(dpkg --print-architecture) signed-by=/etc/apt/keyrings/githubcli-archive-keyring.gpg] https://cli.github.com/packages stable main" | sudo tee /etc/apt/sources.list.d/github-cli.list > /dev/null \
           	&& sudo apt update \
           	&& sudo apt install gh -y
-      - name: Auth to GH
-        run: |
-          echo "${{ secrets.GH_TOKEN }}" | gh auth login --with-token
       - name: Get Milestones (Raw)
+        env:
+          GITHUB_TOKEN: ${{ secrets.GH_ACTIONS_PAT }}
         run: |
           gh api /repos/jbergman-oddball/va-test/milestones --jq  '[.[] | select(.state == "open" and .due_on != null ) | {"milestone_number": .number, "version": .title, "due_on": .due_on}] | sort_by(.due_on)' > milestone.json
           echo "milestone_file=milestone.json" >> $GITHUB_OUTPUT
