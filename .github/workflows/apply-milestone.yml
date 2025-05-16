@@ -59,3 +59,4 @@ jobs:
           fi
         env:
           GH_TOKEN: ${{ secrets.GH_ACTIONS_PAT }}
+          # test string
