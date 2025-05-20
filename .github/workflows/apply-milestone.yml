@@ -34,6 +34,8 @@ jobs:
       - name: Check Linked Issues
         id: linked_issues
         uses: ./.github/workflows/check-linked-issues.yml
+        with:
+          GH_TOKEN: ${{ secrets.GH_ACTIONS_PAT }}
 
       - name: Use linked issues
         id: found_linked_issues
