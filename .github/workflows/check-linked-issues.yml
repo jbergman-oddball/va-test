@@ -1,5 +1,6 @@
 name: "[Admin] Check for linked issues in PRs"
 on:
+  workflow_call:
   pull_request:
     types: [opened, edited, reopened, synchronize, labeled, unlabeled]
 
