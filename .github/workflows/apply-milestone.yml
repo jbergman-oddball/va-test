@@ -9,7 +9,7 @@ on:
 
 jobs:
   process_pr_and_issue:
-    if: github.event.pull_request.merged == true
+    # if: github.event.pull_request.merged == true
     runs-on: ubuntu-latest
     permissions:
       contents: read
@@ -21,12 +21,18 @@ jobs:
     steps:
       - name: Checkout Code
         uses: actions/checkout@v4
+      #
+      - name: where am I
+        run: |
+          pwd
+          ls -al
+          cd .github/workflows
+          pwd
+          ls -al
 
       - name: Check Linked Issues
         id: linked_issues
         uses: ./.github/workflows/check-linked-issues.yml
-        with:
-          github-token: ${{ secrets.GH_ACTIONS_PAT }}
 
       - name: Use linked issues
         id: found_linked_issues
