@@ -4,9 +4,7 @@ on:
   push:
   pull_request:
     types:
-      [opened, edited, reopened, synchronize, labeled, unlabeled]
-
-      # - closed # Trigger on relevant PR events
+      - closed # Trigger on relevant PR events
     paths: # targeting only code that touches the app
       - VAMobile/src/**
 
