@@ -1,6 +1,7 @@
 name: Milestone Linker
 
 on:
+  push:
   pull_request:
     types:
       - closed # Trigger on relevant PR events
