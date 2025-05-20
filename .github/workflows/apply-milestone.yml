@@ -1,46 +1,57 @@
 name: Milestone Linker
 
 on:
+  push:
   pull_request:
-    types: [opened, edited, synchronize, closed] # Trigger on relevant PR events
-    # paths: # targeting only code that touches the app
-    #   - VAMobile/src/**
+    types:
+      [opened, edited, reopened, synchronize, labeled, unlabeled]
+
+      # - closed # Trigger on relevant PR events
+    paths: # targeting only code that touches the app
+      - VAMobile/src/**
 
 jobs:
   process_pr_and_issue:
+    if: github.event.pull_request.merged == true
     runs-on: ubuntu-latest
     permissions:
       contents: read
       pull-requests: write
       issues: write
+    outputs:
+      linked_issues_found: ${{ steps.linked_issues.outputs.linked_issues_count }}
 
     steps:
-      - name: Checkout code
+      - name: Checkout Code
         uses: actions/checkout@v4
 
-      - name: Extract Linked Issue Number from PR Body
-        id: extract_issue # ID for this step to reference its outputs
-        run: |
-          PR_BODY="${{ github.event.pull_request.body }}"
-          LINKED_ISSUE_NUMBER=""
+      - name: Check Linked Issues
+        id: linked_issues
+        uses: ./.github/workflows/check-linked-issues.yml
+        with:
+          github-token: ${{ secrets.GH_ACTIONS_PAT }}
 
-          if [[ "$PR_BODY" =~ ([Cc]loses|[Ff]ixes|[Rr]esolves)[[:space:]]?#([0-9]+) ]]; then
-            LINKED_ISSUE_NUMBER="${BASH_REMATCH[2]}"
-          fi
+      - name: Use linked issues
+        id: found_linked_issues
+        run: |
+          LINKED_ISSUE_NUMBER = ${{ steps.linked_issues.linked_issues_found }}
+          LINKED_ISSUES_ARRAY_STR="${{ steps.linked_issues.outputs.issues }}"
+          echo "Debug: Raw issues array string from 'check-linked-issues.yml': '$LINKED_ISSUES_ARRAY_STR'"
+          FIRST_LINKED_ISSUE=$(echo "$LINKED_ISSUES_ARRAY_STR" | jq -r '.[0]')
+          LINKED_ISSUE_NUMBER=$(echo "$FIRST_LINKED_ISSUE" | cut -d '#' -f 2)
 
           if [[ -z "$LINKED_ISSUE_NUMBER" ]]; then
             echo "No explicit linked issue found in PR description for PR #${{ github.event.pull_request.number }}."
-            echo "linked_issue_number=" >> $GITHUB_OUTPUT
+            # echo "linked_issue_number=" >> $GITHUB_OUTPUT
           else
             echo "Linked issue number found: #$LINKED_ISSUE_NUMBER"
             echo "linked_issue_number=$LINKED_ISSUE_NUMBER" >> $GITHUB_OUTPUT
           fi
 
       - name: Conditional Action Add Milestone to issue or PR
-        if: github.event.pull_request.merged == true
         run: |
           PR_NUM="${{ github.event.pull_request.number }}"
-          LINKED_ISSUE_NUM="${{ steps.extract_issue.outputs.linked_issue_number }}"
+          LINKED_ISSUE_NUM="${{ steps.found_linked_issues.outputs.linked_issue_number }}"
           MILESTONE_ID=$(gh api "repos/${{ github.repository }}/milestones?sort=number&direction=asc" --jq '.[0].number')
           MILESTONE_TITLE=$(gh api "repos/${{ github.repository }}/milestones?sort=number&direction=asc" --jq '.[0].title')
 
