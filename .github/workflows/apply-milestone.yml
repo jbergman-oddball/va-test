@@ -4,8 +4,8 @@ on:
   pull_request:
     types:
       - closed # Trigger on relevant PR events
-    paths: # targeting only code that touches the app
-      - VAMobile/src/**
+    # paths: # targeting only code that touches the app
+    #   - VAMobile/src/**
 
 jobs:
   process_pr_and_issue:
