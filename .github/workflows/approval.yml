@@ -22,5 +22,4 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - run: |
-        echo "I got approval. lets do this thing"
-
+          echo "I got approval. lets do this thing"
