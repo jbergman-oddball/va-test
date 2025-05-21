@@ -32,3 +32,10 @@ jobs:
     steps:
       - run: |
           echo "This should be fun.   All of this will run after approval."
+  job3:
+    runs-on: ubuntu-latest
+    environment:
+      name: release
+    steps:
+      - run: |
+          echo "This should be fun.   All of this will run after approval. I am not going to approve.  I will let this one sit."
