@@ -4,22 +4,24 @@ on:
   push:
 
 jobs:
-  get-workflow-environment:
-    runs-on: ubuntu-latest
-    # Hard coding env and dynamic would not work. This is fine as we only want to target these branches for protections.
-    environment: release
-    outputs:
-      environment_name: ${{ steps.check-environment.outputs.env_name }}
-    steps:
-      - name: Check environment
-        id: check-environment
-        # Run this only if it was manually run or the branch contains release.
-        if: ${{ github.event_name == 'push' || contains(github.ref, 'release/') }}
-        run: |
-          echo "env_name=release" >> $GITHUB_OUTPUT
+  # get-workflow-environment:
+  #   runs-on: ubuntu-latest
+  #   # Hard coding env and dynamic would not work. This is fine as we only want to target these branches for protections.
+  #   environment: release
+  #   outputs:
+  #     environment_name: ${{ steps.check-environment.outputs.env_name }}
+  #   steps:
+  #     - name: Check environment
+  #       id: check-environment
+  #       # Run this only if it was manually run or the branch contains release.
+  #       if: ${{ github.event_name == 'push' || contains(github.ref, 'release/') }}
+  #       run: |
+  #         echo "env_name=release" >> $GITHUB_OUTPUT
   indicate_start:
-    needs: get-workflow-environment
+    # needs: get-workflow-environment
     runs-on: ubuntu-latest
+    environment:
+      name: release
     steps:
       - run: |
           echo "I got approval. lets do this thing"
