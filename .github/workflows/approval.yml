@@ -19,7 +19,7 @@ jobs:
   #         echo "env_name=release" >> $GITHUB_OUTPUT
   approval_job:
     runs-on: ubuntu-latest
-    environent:
+    environment:
       name: release
     steps:
       - run: echo "Waiting on approval and timer"
