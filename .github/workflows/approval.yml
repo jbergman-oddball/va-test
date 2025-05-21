@@ -17,25 +17,31 @@ jobs:
   #       if: ${{ github.event_name == 'push' || contains(github.ref, 'release/') }}
   #       run: |
   #         echo "env_name=release" >> $GITHUB_OUTPUT
-  indicate_start:
-    # needs: get-workflow-environment
+  approval_job:
     runs-on: ubuntu-latest
-    environment:
+    environent:
       name: release
+  job1:
+    needs: approval_job
+    runs-on: ubuntu-latest
+    # environment:
+    #   name: release
     steps:
       - run: |
           echo "I got approval. lets do this thing"
   job2:
+    needs: approval_job
     runs-on: ubuntu-latest
-    environment:
-      name: release
+    # environment:
+    #   name: release
     steps:
       - run: |
           echo "This should be fun.   All of this will run after approval."
   job3:
+    needs: approval_job
     runs-on: ubuntu-latest
-    environment:
-      name: release
+    # environment:
+    #   name: release
     steps:
       - run: |
           echo "This should be fun.   All of this will run after approval. I am not going to approve.  I will let this one sit."
