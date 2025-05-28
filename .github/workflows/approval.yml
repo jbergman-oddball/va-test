@@ -54,7 +54,10 @@ jobs:
       - name: get approver
         run: |
           APPROVER=$( gh api /repos/${{ github.repository }}/actions/runs/15170388623/approvals | jq '.[] | select(.state == "approved") | select(.user.login | contains("[bot]") | not) | .user.login')
+          echo $APPROVER
           echo "approver=${APPROVER}" >> "$GITHUB_OUTPUT"
+        env:
+          GH_TOKEN: ${{ secrets.GH_ACTIONS_PAT }}
       - name: Add the approval comment
         uses: peter-evans/create-or-update-comment@v4
         with:
