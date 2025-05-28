@@ -44,6 +44,26 @@ jobs:
           # repository: ${{ github.event.client_payload.github.payload.repository.full_name }}
           # comment-id: ${{ github.event.client_payload.github.payload.comment.id }}
           # reaction-type: rocket
+
+  add_approve:
+    - name: get approver details
+      needs: [approval_job]
+      runs-on: ubuntu-latest
+      outputs:
+        approver_login: ${{ steps.get_approver_details.outputs.approver }}
+      steps:
+        - name: approver
+          run: |
+            APPROVER=$( gh api /repos/${{ github.repository }}/actions/runs/15170388623/approvals | jq '.[] | select(.state == "approved") | select(.user.login | contains("[bot]") | not) | .user.login')
+            echo "approver=${APPROVER}" >> "$GITHUB_OUTPUT"
+    - name: Add the approval comment
+      needs: [approval_flow]
+      uses: peter-evans/create-or-update-comment@v4
+      with:
+        issue-number: 13
+        body: |
+          /approve ${{ needs.release_ticket.outputs.versionNumber }}
+          approved by: "${{ needs.add_approve.outputs.approver_login }}"
   job1:
     needs: approval_job
     runs-on: ubuntu-latest
