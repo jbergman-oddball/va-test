@@ -48,6 +48,8 @@ jobs:
   add_approve:
     needs: [approval_job]
     runs-on: ubuntu-latest
+    env:
+      GH_TOKEN: ${{ secrets.GH_ACTIONS_PAT }}
     outputs:
       approver_login: ${{ steps.get_approver.outputs.approver }}
     steps:
@@ -57,16 +59,9 @@ jobs:
           APPROVER=$( gh api /repos/${{ github.repository }}/actions/runs/15170388623/approvals | jq '.[] | select(.state == "approved") | select(.user.login | contains("[bot]") | not) | .user.login')
           echo $APPROVER
           echo "approver=${APPROVER}" >> "$GITHUB_OUTPUT"
-        env:
-          GH_TOKEN: ${{ secrets.GH_ACTIONS_PAT }}
       - name: Add the approval comment
-        uses: peter-evans/create-or-update-comment@v4
-        with:
-          issue-number: 13
-          body: |
-            /approve v2.52.0
-            approved by: ${{ steps.get_approver.outputs.approver-id }}
-          token: ${{ secrets.GH_ACTIONS_PAT }}
+        run: |
+          gh issue comment 13 -b "/approve v2.52.0 Approved by: ${{ steps.get_approver.outputs.approver }}"
 
   job1:
     needs: approval_job
