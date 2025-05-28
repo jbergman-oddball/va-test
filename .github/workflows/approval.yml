@@ -49,7 +49,7 @@ jobs:
     needs: [approval_job]
     runs-on: ubuntu-latest
     outputs:
-      approver_login: ${{ steps.get_approver.outputs.approver }}
+      approver_login: ${{ steps.approver-id.outputs.approver }}
     steps:
       - name: "Checkout repo"
         uses: actions/checkout@v3
