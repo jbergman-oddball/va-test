@@ -60,14 +60,15 @@ jobs:
       - name: get_approver
         id: approver-id
         run: |
-          APPROVER=$( gh api /repos/${{ github.repository }}/actions/runs/15170388623/approvals | jq '.[] | select(.state == "approved") | select(.user.login | contains("[bot]") | not) | .user.login')
+          APPROVER=$( gh api /repos/${{ github.repository }}/actions/runs/${{ github.run_id }}/approvals | jq '.[] | select(.state == "approved") | select(.user.login | contains("[bot]") | not) | .user.login')
           echo $APPROVER
           echo "approver=${APPROVER}" >> "$GITHUB_OUTPUT"
       - name: Add the approval comment
         run: |
-          gh issue comment 13 -b "/approve v2.52.0 
-          Approved by: ${{ steps.get_approver.outputs.approver_login }}"
-
+          gh issue comment 13 -b <<EOF
+          /approve v2.52.0 
+          Approved by: ${{ steps.get_approver.outputs.approver }}
+          EOF
   job1:
     needs: approval_job
     runs-on: ubuntu-latest
