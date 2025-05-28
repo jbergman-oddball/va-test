@@ -61,6 +61,7 @@ jobs:
         id: approver-id
         run: |
           APPROVER=$( gh api /repos/${{ github.repository }}/actions/runs/${{ github.run_id }}/approvals | jq '.[] | select(.state == "approved") | select(.user.login | contains("[bot]") | not) | .user.login')
+          APPROVER_NAME=@$APPROVER | sed 's/"//g'
           echo $APPROVER
           echo "approver=${APPROVER}" >> "$GITHUB_OUTPUT"
           gh issue comment 13 -b "/approve v2.52.0 
