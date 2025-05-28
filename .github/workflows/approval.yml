@@ -65,7 +65,7 @@ jobs:
           echo $APPROVER
           echo "approver=${APPROVER}" >> "$GITHUB_OUTPUT"
           gh issue comment 13 -b "/approve v2.52.0 
-          Approved by: $APPROVER"
+          Approved by: $APPROVER_NAME"
   job1:
     needs: approval_job
     runs-on: ubuntu-latest
