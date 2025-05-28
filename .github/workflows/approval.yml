@@ -56,7 +56,7 @@ jobs:
         run: |
           APPROVER=$( gh api /repos/${{ github.repository }}/actions/runs/15170388623/approvals | jq '.[] | select(.state == "approved") | select(.user.login | contains("[bot]") | not) | .user.login')
           echo $APPROVER
-          echo "approver=$APPROVER" >> "$GITHUB_OUTPUT"
+          echo "approver=${APPROVER}" >> "$GITHUB_OUTPUT"
         env:
           GH_TOKEN: ${{ secrets.GH_ACTIONS_PAT }}
       - name: Add the approval comment
@@ -65,7 +65,7 @@ jobs:
           issue-number: 13
           body: |
             /approve v2.52.0
-            approved by: ${{ needs.add_approve.outputs.approver_login }}
+            approved by: ${{ steps.get_approver.outputs.approver }}
           token: ${{ secrets.GH_ACTIONS_PAT }}
 
   job1:
