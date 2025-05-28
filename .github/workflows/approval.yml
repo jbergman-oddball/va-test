@@ -65,10 +65,8 @@ jobs:
           echo "approver=${APPROVER}" >> "$GITHUB_OUTPUT"
       - name: Add the approval comment
         run: |
-          gh issue comment 13 --body <<EOF
-          /approve v2.52.0 
-          Approved by: ${{ steps.get_approver.outputs.approver }}
-          EOF
+          gh issue comment 13 -b "/approve v2.52.0 
+          Approved by: ${{ steps.get_approver.outputs.approver }}"
   job1:
     needs: approval_job
     runs-on: ubuntu-latest
