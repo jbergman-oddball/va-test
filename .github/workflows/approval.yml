@@ -65,7 +65,7 @@ jobs:
           issue-number: 13
           body: |
             /approve v2.52.0
-            approved by: ${{ steps.get_approver.outputs.approver }}
+            approved by: ${{APPROVER}}
           token: ${{ secrets.GH_ACTIONS_PAT }}
 
   job1:
