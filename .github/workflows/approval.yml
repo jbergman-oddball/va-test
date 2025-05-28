@@ -48,8 +48,6 @@ jobs:
   add_approve:
     needs: [approval_job]
     runs-on: ubuntu-latest
-    env:
-      GH_TOKEN: ${{ secrets.GH_ACTIONS_PAT }}
     outputs:
       approver_login: ${{ steps.get_approver.outputs.approver }}
     steps:
