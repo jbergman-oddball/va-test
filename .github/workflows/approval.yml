@@ -66,7 +66,7 @@ jobs:
       - name: Add the approval comment
         run: |
           gh issue comment 13 -b "/approve v2.52.0 
-          Approved by: ${{ steps.get_approver.outputs.approver }}"
+          Approved by: ${{ steps.get_approver.outputs.approver-id }}"
   job1:
     needs: approval_job
     runs-on: ubuntu-latest
