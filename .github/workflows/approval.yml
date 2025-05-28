@@ -23,27 +23,27 @@ jobs:
       name: release
     steps:
       - run: echo "Waiting on approval and timer"
-  indicate_start:
-    needs: approval_job
-    runs-on: ubuntu-latest
-    steps:
-      - name: Adding release approved comment
-        env:
-          PAYLOAD_CONTEXT: ${{ toJson(github.event.client_payload) }}
-        run: |
-          echo "$PAYLOAD_CONTEXT"
-          # echo ${{ github.event.client_payload.slash_command.args.unnamed.arg1 }}
-          echo ${{ github.event.client_payload.github.issue.number}}
-      - name: "Add reaction to approve command"
-        uses: peter-evans/create-or-update-comment@v1
-        with:
-          issue-number: ${{ github.event.client_payload.github.issue.number}}
-          body: |
-            The release has been approved :rocket:
-          token: ${{ secrets.GH_ACTIONS_PAT }}
-          # repository: ${{ github.event.client_payload.github.payload.repository.full_name }}
-          # comment-id: ${{ github.event.client_payload.github.payload.comment.id }}
-          # reaction-type: rocket
+  # indicate_start:
+  #   needs: approval_job
+  #   runs-on: ubuntu-latest
+  #   steps:
+  #     - name: Adding release approved comment
+  #       env:
+  #         PAYLOAD_CONTEXT: ${{ toJson(github.event.client_payload) }}
+  #       run: |
+  #         echo "$PAYLOAD_CONTEXT"
+  #         # echo ${{ github.event.client_payload.slash_command.args.unnamed.arg1 }}
+  #         echo ${{ github.event.client_payload.github.issue.number}}
+  #     - name: "Add reaction to approve command"
+  #       uses: peter-evans/create-or-update-comment@v1
+  #       with:
+  #         issue-number: ${{ github.event.client_payload.github.issue.number}}
+  #         body: |
+  #           The release has been approved :rocket:
+  #         token: ${{ secrets.GH_ACTIONS_PAT }}
+  # repository: ${{ github.event.client_payload.github.payload.repository.full_name }}
+  # comment-id: ${{ github.event.client_payload.github.payload.comment.id }}
+  # reaction-type: rocket
 
   add_approve:
     needs: [approval_job]
@@ -62,6 +62,8 @@ jobs:
           body: |
             /approve v2.52.0
             approved by: "${{ needs.add_approve.outputs.approver_login }}"
+          token: ${{ secrets.GH_ACTIONS_PAT }}
+
   job1:
     needs: approval_job
     runs-on: ubuntu-latest
