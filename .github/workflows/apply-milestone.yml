@@ -45,7 +45,7 @@ jobs:
         run: |
           LINKED_ISSUE=${{ steps.check-linked-issues.outputs.issues }}
           echo "Debug: Raw issues array string from 'check-linked-issues.yml': '$LINKED_ISSUES_ARRAY_STR'"
-          LINKED_ISSUE_NUMBER=$(echo "$LINKED_ISSUE" | cut -d '#' -f 2)
+          LINKED_ISSUE_NUMBER=$(echo "$LINKED_ISSUE" | sed 's/^#//g' | xargs)
 
           if [[ -z "$LINKED_ISSUE_NUMBER" ]]; then
             echo "No explicit linked issue found in PR description for PR #${{ github.event.pull_request.number }}."
