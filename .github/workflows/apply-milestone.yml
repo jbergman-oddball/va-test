@@ -76,5 +76,5 @@ jobs:
             echo "Processing PR $PR_NUM..."
              gh pr edit $PR_NUM --milestone $MILESTONE_TITLE
           fi
-      # env:
-      #   GH_TOKEN: ${{ secrets.GH_ACTIONS_PAT }}
+      env:
+        GH_TOKEN: ${{ secrets.GH_ACTIONS_PAT }}
