@@ -44,8 +44,7 @@ jobs:
         id: found_linked_issues
         run: |
           LINKED_ISSUE=${{ steps.check-linked-issues.outputs.issues }}
-          echo "Issue number is $LINKED_ISSUE"
-          LINKED_ISSUE_NUMBER=$(echo "$LINKED_ISSUE" | sed 's/^#//g' | xargs)
+          LINKED_ISSUE_NUMBER=$(echo "$LINKED_ISSUE" | cut -d '#' -f 2)
 
           if [[ -z "$LINKED_ISSUE_NUMBER" ]]; then
             echo "No explicit linked issue found in PR description for PR #${{ github.event.pull_request.number }}."
