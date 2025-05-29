@@ -33,9 +33,7 @@ jobs:
 
       - name: Check Linked Issues
         uses: nearform-actions/github-action-check-linked-issues@v1
-        id: linked_issues
-        # with:
-        #   github-token: ${{ secrets.GITHUB_TOKEN }}
+        id: check-linked-issues
 
       - name: Get those linked issues
         run: |
