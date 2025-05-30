@@ -1,35 +1,23 @@
-name: Milestone Linker
+name: "[Admin] Milestone Linker"
 
 on:
   pull_request:
-    types:
-      - closed # Trigger on relevant PR events
-      - opened
-      - edited
-  # paths: # targeting only code that touches the app
+    types: closed # Trigger on relevant PR events
+
+    # paths: # targeting only code that touches the app
   #   - VAMobile/src/**
 
 jobs:
   process_pr_and_issue:
-    # if: github.event.pull_request.merged == true
+    if: github.event.pull_request.merged == true
     runs-on: ubuntu-latest
     permissions:
       contents: write
       pull-requests: write
       issues: write
-    # outputs:
-    #   linked_issues_found: ${{ steps.linked_issues.outputs.issues }}
     steps:
       - name: Checkout Code
         uses: actions/checkout@v4
-
-      - name: where am I
-        run: |
-          pwd
-          ls -al
-          cd .github/workflows
-          pwd
-          ls -al
 
       - name: Check Linked Issues
         uses: nearform-actions/github-action-check-linked-issues@v1
@@ -48,7 +36,6 @@ jobs:
 
           if [[ -z "$LINKED_ISSUE_NUMBER" ]]; then
             echo "No explicit linked issue found in PR description for PR #${{ github.event.pull_request.number }}."
-            # echo "linked_issue_number=" >> $GITHUB_OUTPUT
           else
             echo "Linked issue number found: #$LINKED_ISSUE_NUMBER"
             echo "linked_issue_number=$LINKED_ISSUE_NUMBER" >> $GITHUB_OUTPUT
