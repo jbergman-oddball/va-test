@@ -59,21 +59,22 @@ jobs:
         run: |
           PR_NUM="${{ github.event.pull_request.number }}"
           LINKED_ISSUE_NUM="${{ steps.found_linked_issues.outputs.linked_issue_number }}"
+          LINKED_ISSUE_N=$(echo "$LINKED_ISSUE_NUM" | sed 's/]$//g')
           MILESTONE_ID=$(gh api "repos/${{ github.repository }}/milestones?sort=number&direction=asc" --jq '.[0].number')
           MILESTONE_TITLE=$(gh api "repos/${{ github.repository }}/milestones?sort=number&direction=asc" --jq '.[0].title')
 
-          if [[ -z "$LINKED_ISSUE_NUM" ]]; then
+          if [[ -z "$LINKED_ISSUE_N" ]]; then
             echo "PR Number $PR_NUM"
           else
-            echo "Linked Issue Number: $LINKED_ISSUE_NUM"
+            echo "Linked Issue Number: $LINKED_ISSUE_N"
           fi
 
-          if [[ -n "$LINKED_ISSUE_NUM" ]]; then
-          echo "Linked issue $LINKED_ISSUE_NUM found. Adding milestone $MILESTONE_TITLE."
-            gh issue edit $LINKED_ISSUE_NUM --milestone $MILESTONE_TITLE
+          if [[ -n "$LINKED_ISSUE_N" ]]; then
+          echo "Linked issue $LINKED_ISSUE_N found. Adding milestone $MILESTONE_TITLE."
+            gh issue edit $LINKED_ISSUE_N --milestone $MILESTONE_TITLE
           else
             echo "Setting milestone $MILESTONE_TITLE" for PR $PR_NUM
-            echo "Linked Issue Number: $LINKED_ISSUE_NUM"
+            echo "Linked Issue Number: $LINKED_ISSUE_N"
             echo "Processing PR $PR_NUM..."
              gh pr edit $PR_NUM --milestone $MILESTONE_TITLE
           fi
