@@ -1,0 +1,102 @@
+name: "Approval"
+
+on:
+  push:
+
+jobs:
+  # get-workflow-environment:
+  #   runs-on: ubuntu-latest
+  #   # Hard coding env and dynamic would not work. This is fine as we only want to target these branches for protections.
+  #   environment: release
+  #   outputs:
+  #     environment_name: ${{ steps.check-environment.outputs.env_name }}
+  #   steps:
+  #     - name: Check environment
+  #       id: check-environment
+  #       # Run this only if it was manually run or the branch contains release.
+  #       if: ${{ github.event_name == 'push' || contains(github.ref, 'release/') }}
+  #       run: |
+  #         echo "env_name=release" >> $GITHUB_OUTPUT
+  approval_job:
+    runs-on: ubuntu-latest
+    environment:
+      name: release
+    steps:
+      - run: echo "Waiting on approval and timer"
+  # indicate_start:
+  #   needs: approval_job
+  #   runs-on: ubuntu-latest
+  #   steps:
+  #     - name: Adding release approved comment
+  #       env:
+  #         PAYLOAD_CONTEXT: ${{ toJson(github.event.client_payload) }}
+  #       run: |
+  #         echo "$PAYLOAD_CONTEXT"
+  #         # echo ${{ github.event.client_payload.slash_command.args.unnamed.arg1 }}
+  #         echo ${{ github.event.client_payload.github.issue.number}}
+  #     - name: "Add reaction to approve command"
+  #       uses: peter-evans/create-or-update-comment@v1
+  #       with:
+  #         issue-number: ${{ github.event.client_payload.github.issue.number}}
+  #         body: |
+  #           The release has been approved :rocket:
+  #         token: ${{ secrets.GH_ACTIONS_PAT }}
+  # repository: ${{ github.event.client_payload.github.payload.repository.full_name }}
+  # comment-id: ${{ github.event.client_payload.github.payload.comment.id }}
+  # reaction-type: rocket
+
+  add_approve:
+    needs: [approval_job]
+    runs-on: ubuntu-latest
+    outputs:
+      approver_login: ${{ steps.approver-id.outputs.approver }}
+    steps:
+      - name: "Checkout repo"
+        uses: actions/checkout@v3
+      - name: "Set up GH CLI secret"
+        run: echo "${{ secrets.GH_ACTIONS_PAT }}" >> token.txt
+      - name: "Log into GH CLI"
+        run: gh auth login --with-token < token.txt
+      - name: get_approver
+        id: approver-id
+        run: |
+          APPROVER=$( gh api /repos/${{ github.repository }}/actions/runs/${{ github.run_id }}/approvals | jq '.[] | select(.state == "approved") | select(.user.login | contains("[bot]") | not) | .user.login')
+          APPROVER_NAME=$(echo "$APPROVER" | sed 's/"//g')
+          echo $APPROVER
+          echo $APPROVER_NAME
+          echo "approver=${APPROVER}" >> "$GITHUB_OUTPUT"
+          echo "approver_name=${APPROVER_NAME}" >> "$GITHUB_OUTPUT"
+          gh issue comment 13 -b "/approve v2.52.0 
+          Approved by: @$APPROVER_NAME"
+  job1:
+    needs: approval_job
+    runs-on: ubuntu-latest
+    # environment:
+    #   name: release
+    steps:
+      - run: |
+          echo "I got approval. lets do this thing"
+  job2:
+    needs: approval_job
+    runs-on: ubuntu-latest
+    # environment:
+    #   name: release
+    steps:
+      - run: |
+          echo "This should be fun.   All of this will run after approval."
+  job3:
+    needs: approval_job
+    runs-on: ubuntu-latest
+    # environment:
+    #   name: release
+    steps:
+      - run: |
+          echo "This should be fun.   All of this will run after approval. I am not going to approve.  I will let this one sit."
+  job4:
+    needs: approval_job
+    runs-on: ubuntu-latest
+    # environment:
+    #   name: release
+    steps:
+      - run: |
+          echo "This should be fun.   All of this will run after approval. I am not going to approve.  I will let this one sit. one more job"
