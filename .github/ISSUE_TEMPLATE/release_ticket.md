@@ -1,9 +1,9 @@
 ---
-name: Release tiocket test 
+name: Release tiocket test
 about: Ticket tracking for testing
 title: Ticket testing
-labels:'' 
-assignees: ''
+labels: ""
+assignees: ""
 ---
 
 # Release for TESTING
