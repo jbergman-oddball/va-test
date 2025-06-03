@@ -95,7 +95,9 @@ jobs:
       - run: echo "${{ secrets.GITHUB_TOKEN }}" >> token.txt
       - run: gh auth login --with-token < token.txt
       - run: |
-        gh issue edit $TICKET_NUM --milestone ${{ needs.release_ticket.outputs.versionNumber }}
+          echo $TICKET_NUM
+          echo ${{ needs.release_ticket.outputs.versionNumber }}
+          gh issue edit $TICKET_NUM --milestone ${{ needs.release_ticket.outputs.versionNumber }}
   # start_slack_thread:
   #   name: Start Slack thread
   #   needs: release_ticket
@@ -172,8 +174,9 @@ jobs:
   #         APPROVER_NAME=$(echo "$APPROVER" | sed 's/"//g')
   #         echo "approver=${APPROVER}" >> "$GITHUB_OUTPUT"
   #         echo "approver_name=${APPROVER_NAME}" >> "$GITHUB_OUTPUT"
-  #         gh issue comment ${{ needs.release_ticket.outputs.ticketNumber }} -b "/approve ${{ needs.release_ticket.outputs.versionNumber }} 
+  #         gh issue comment ${{ needs.release_ticket.outputs.ticketNumber }} -b "/approve ${{ needs.release_ticket.outputs.versionNumber }}
   #         Approved by: @$APPROVER_NAME"
   #
+
 #
 #
