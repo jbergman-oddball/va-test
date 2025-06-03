@@ -7,6 +7,8 @@ jobs:
   release_ticket:
     # if: ${{ contains(github.ref, 'refs/heads/release/') }}
     runs-on: ubuntu-latest
+    perissions:
+      issues: write
     outputs:
       ticketNumber: ${{steps.create_issue.outputs.number}}
       versionNumber: ${{env.VERSION}}
