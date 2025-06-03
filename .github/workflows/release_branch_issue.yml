@@ -3,7 +3,7 @@ name: "[Release] New Release Issue"
 on:
   push:
   create:
-perissions:
+permissions:
   issues: write
 jobs:
   release_ticket:
