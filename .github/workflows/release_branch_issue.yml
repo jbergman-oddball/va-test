@@ -2,9 +2,9 @@ name: "[Release] New Release Issue"
 
 on:
   push:
-  perissions:
-    issues: write
   create:
+perissions:
+  issues: write
 jobs:
   release_ticket:
     # if: ${{ contains(github.ref, 'refs/heads/release/') }}
