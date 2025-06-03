@@ -1,6 +1,9 @@
 ---
-name: Release Review Template
-about: Template for requesting a production release for VA mobile app
+name: Release tiocket test 
+about: Ticket tracking for testing
+title: Ticket testing
+labels:'' 
+assignees: ''
 ---
 
 # Release for TESTING
