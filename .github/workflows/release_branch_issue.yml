@@ -97,6 +97,7 @@ jobs:
       - run: echo "${{ secrets.GITHUB_TOKEN }}" >> token.txt
       - run: gh auth login --with-token < token.txt
       - run: |
+          TICKET_NUM=${{ needs.release_ticket.outputs.ticketNumber }}
           echo $TICKET_NUM
           echo ${{ needs.release_ticket.outputs.versionNumber }}
           gh issue edit $TICKET_NUM --milestone ${{ needs.release_ticket.outputs.versionNumber }}
