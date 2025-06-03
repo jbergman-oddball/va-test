@@ -100,7 +100,7 @@ jobs:
           TICKET_NUM=${{ needs.release_ticket.outputs.ticketNumber }}
           echo $TICKET_NUM
           echo ${{ needs.release_ticket.outputs.versionNumber }}
-          gh issue edit $TICKET_NUM --milestone ${{ needs.release_ticket.outputs.versionNumber }}
+          gh milestone edit ${{ needs.release_ticket.outputs.versionNumber }}  --state closed
   # start_slack_thread:
   #   name: Start Slack thread
   #   needs: release_ticket
