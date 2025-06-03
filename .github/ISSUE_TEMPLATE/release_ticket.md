@@ -1,9 +1,6 @@
 ---
 name: Release Review Template
 about: Template for requesting a production release for VA mobile app
-title: "{{ env.releaseDate }} Release Sign-Off: {{ env.versionNumber }}"
-labels: release
-assignees: rtwell
 ---
 
 # Release for {{ env.releaseDate }}
