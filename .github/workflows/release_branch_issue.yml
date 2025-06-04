@@ -100,19 +100,13 @@ jobs:
           VERSION_NUMBER=${{ needs.release_ticket.outputs.versionNumber }}
           TICKET_NUM=${{ needs.release_ticket.outputs.ticketNumber }}
           MILESTONE_ID=$(gh api "repos/${{ github.repository }}/milestones" --jq '.[] | select(.title == "'"$VERSION_NUMBER"'") | .number')
-          # MILESTONE_ID_RAW=$(gh api "repos/${{ github.repository }}/milestones" --jq '.[] | select(.title == "'"$VERSION_NUMBER"'") | .number')
           echo Ticket Number: $TICKET_NUM
           echo Version Numbver: $VERSION_NUMBER
-          # MILESTONE_ID=$(echo "$MILESTONE_ID_RAW" | tr -d '\r\n')
           echo Milestone ID: $MILESTONE_ID
-          echo "DEBUG: Value of MILSTONE_ID after retrieval: -->$MILESTONE_ID<--" # Use delimiters for clarity
-          # Capture the URL string into a separate variable for inspection
-          MILESTONE_URL="repos/${{ github.repository }}/milestones/$MILESTONE_ID"
-          echo "DEBUG: URL string to be used: -->$MILESTONE_URL<--"
-          # gh api \
-          #   --method PATCH \
-          #   "repos/${{ github.repository }}/milestones/$MILESTONE_ID" \
-          #   -F state=closed
+          gh api \
+            --method PATCH \
+            "repos/${{ github.repository }}/milestones/$MILESTONE_ID" \
+            -F state=closed
   # start_slack_thread:
   #   name: Start Slack thread
   #   needs: release_ticket
