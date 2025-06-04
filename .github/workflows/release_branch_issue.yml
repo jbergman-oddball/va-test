@@ -99,13 +99,14 @@ jobs:
       - run: |
           VERSION_NUMBER=${{ needs.release_ticket.outputs.versionNumber }}
           TICKET_NUM=${{ needs.release_ticket.outputs.ticketNumber }}
-          MILSTONE_ID=$(gh api "repos/${{ github.repository }}/milestones" --jq '.[] | select(.title == "'"$VERSION_NUMBER"'") | .number')
-          echo Milestone ID: $MILSTONE_ID
+          MILSTONE_ID_RAW=$(gh api "repos/${{ github.repository }}/milestones" --jq '.[] | select(.title == "'"$VERSION_NUMBER"'") | .number')
           echo Ticket Number: $TICKET_NUM
           echo Version Numbver: $VERSION_NUMBER
+          export MILESTONE_ID="$MILESTONE_ID_RAW"
+          echo Milestone ID: $MILSTONE_ID
           echo "DEBUG: Value of MILSTONE_ID after retrieval: -->$MILSTONE_ID<--" # Use delimiters for clarity
           # Capture the URL string into a separate variable for inspection
-          MILESTONE_URL="repos/${{ github.repository }}/milestones/"$MILESTONE_ID""
+          MILESTONE_URL="repos/${{ github.repository }}/milestones/$MILESTONE_ID"
           echo "DEBUG: URL string to be used: -->$MILESTONE_URL<--"
           # gh api \
           #   --method PATCH \
