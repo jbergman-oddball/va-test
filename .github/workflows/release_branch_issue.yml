@@ -105,7 +105,7 @@ jobs:
           echo Version Numbver: $VERSION_NUMBER
           echo "DEBUG: Value of MILSTONE_ID after retrieval: -->$MILSTONE_ID<--" # Use delimiters for clarity
           # Capture the URL string into a separate variable for inspection
-          MILESTONE_URL="repos/${{ github.repository }}/milestones/$MILESTONE_ID"
+          MILESTONE_URL="repos/${{ github.repository }}/milestones/"$MILESTONE_ID""
           echo "DEBUG: URL string to be used: -->$MILESTONE_URL<--"
           # gh api \
           #   --method PATCH \
