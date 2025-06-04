@@ -104,7 +104,7 @@ jobs:
           echo ${{ needs.release_ticket.outputs.versionNumber }}
           gh api \
             --method PATCH \
-            "repos/${{ github.repository }}/milestones/${MILESTONE_ID}" \
+            "repos/${{ github.repository }}/milestones/$MILESTONE_ID" \
             -F state=closed
   # start_slack_thread:
   #   name: Start Slack thread
