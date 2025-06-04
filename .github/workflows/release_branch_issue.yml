@@ -102,10 +102,10 @@ jobs:
           echo $MILSTONE_ID
           echo $TICKET_NUM
           echo ${{ needs.release_ticket.outputs.versionNumber }}
-          # gh api \
-          #   --method PATCH \
-          #   "repos/${{ github.repository }}/milestones/${{ needs.release_ticket.outputs.versionNumber }}" \
-          #   -F state=closed
+          gh api \
+            --method PATCH \
+            "repos/${{ github.repository }}/milestones/${MILESTONE_ID}" \
+            -F state=closed
   # start_slack_thread:
   #   name: Start Slack thread
   #   needs: release_ticket
