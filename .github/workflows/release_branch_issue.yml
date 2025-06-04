@@ -98,12 +98,14 @@ jobs:
       - run: gh auth login --with-token < token.txt
       - run: |
           TICKET_NUM=${{ needs.release_ticket.outputs.ticketNumber }}
+          MILSTONE_ID=$(gh api "repos/$${{ github.repository }}/milestones" --jq '.[] | select(.title == ${{ needs.release_ticket.outputs.versionNumber }}) | .number')
+          echo $MILSTONE_ID
           echo $TICKET_NUM
           echo ${{ needs.release_ticket.outputs.versionNumber }}
-          gh api \
-            --method PATCH \
-            "repos/${{ github.repository }}/milestones/${{ needs.release_ticket.outputs.versionNumber }}" \
-            -F state=closed
+          # gh api \
+          #   --method PATCH \
+          #   "repos/${{ github.repository }}/milestones/${{ needs.release_ticket.outputs.versionNumber }}" \
+          #   -F state=closed
   # start_slack_thread:
   #   name: Start Slack thread
   #   needs: release_ticket
