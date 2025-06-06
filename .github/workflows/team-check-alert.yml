@@ -17,6 +17,11 @@ on:
   # NOTE: This needs to be reverted for prod
   # paths:
   #   - "VAMobile/src/**" #Only affecting app code
+  #
+permissions:
+  contents: read
+  teams: read
+
 jobs:
   check_team_and_alert:
     runs-on: ubuntu-latest
@@ -27,30 +32,19 @@ jobs:
     env:
       GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
     steps:
-      # - name: Install and Verify envsubst
-      #   shell: bash -e {0}
-      #   run: |
-      #     echo "--- Checking OS Information ---"
-      #     cat /etc/os-release || true
-      #     echo "--- Attempting to install gettext package ---"
-      #     sudo apt-get update
-      #     sudo apt-get install -y gettext
-      #     echo "--- Verifying 'envsubst' command exists ---"
-      #     which envsubst
-      #     echo "--- envsubst located at: $(which envsubst) ---"
       - name: Checkout code
         uses: actions/checkout@v4
       # NOTE: This is only needed for act
-      - name: Install Packages
-        run: |
-          type -p wget >/dev/null || (sudo apt update && sudo apt-get install wget -y)
-          sudo mkdir -p -m 755 /etc/apt/keyrings
-          wget -qO- https://cli.github.com/packages/githubcli-archive-keyring.gpg | sudo tee /etc/apt/keyrings/githubcli-archive-keyring.gpg > /dev/null
-          sudo chmod go+r /etc/apt/keyrings/githubcli-archive-keyring.gpg
-          echo "deb [arch=$(dpkg --print-architecture) signed-by=/etc/apt/keyrings/githubcli-archive-keyring.gpg] https://cli.github.com/packages stable main" | sudo tee /etc/apt/sources.list.d/github-cli.list > /dev/null
-          sudo apt update -y
-          sudo apt upgrade -y
-          sudo apt install -y gh gettext
+      # - name: Install Packages
+      #   run: |
+      #     type -p wget >/dev/null || (sudo apt update && sudo apt-get install wget -y)
+      #     sudo mkdir -p -m 755 /etc/apt/keyrings
+      #     wget -qO- https://cli.github.com/packages/githubcli-archive-keyring.gpg | sudo tee /etc/apt/keyrings/githubcli-archive-keyring.gpg > /dev/null
+      #     sudo chmod go+r /etc/apt/keyrings/githubcli-archive-keyring.gpg
+      #     echo "deb [arch=$(dpkg --print-architecture) signed-by=/etc/apt/keyrings/githubcli-archive-keyring.gpg] https://cli.github.com/packages stable main" | sudo tee /etc/apt/sources.list.d/github-cli.list > /dev/null
+      #     sudo apt update -y
+      #     sudo apt upgrade -y
+      #     sudo apt install -y gh gettext
       - name: fetch team members and check author of PR
         id: fetch_and_check_team
         env:
