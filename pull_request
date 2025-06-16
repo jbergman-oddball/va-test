@@ -1,10 +1,10 @@
 {
-  "action": "opened",
+  "action": "closed",
   "pull_request": {
     "number": 123,
     "title": "This is my test PR",
     "body": "This PR addresses issue #456 and closes #789 by adding a new user authentication module. \n\nRelated to: #456, Closes #457",
-    "state": "open",
+    "state": "merged",
     "user": {
       "login": "octocat",
       "id": 1,

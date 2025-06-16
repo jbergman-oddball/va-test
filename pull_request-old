@@ -1,5 +1,5 @@
 {
-  "action": "opened",
+  "action": "closed",
   "pull_request": {
     "head": {
       "ref": "chore-branch-here",
@@ -16,8 +16,8 @@
       }
     },
     "number": 999,
-    "merged": false,
-    "state": "open",
+    "merged": true,
+    "state": "closed",
     "title": "Test PR for Workflow",
     "body": "This is a test pull request for local testing.",
     "user": {
