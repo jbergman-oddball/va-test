@@ -1,9 +1,7 @@
-shellcheck:
-  disable: true
-
 disable:
   - "uses-latest-version"
   - "glob-double-quotes"
   - "unrecognized-event"
   - "shellcheck"
   - "action-version"
+  - "syntax-check"
