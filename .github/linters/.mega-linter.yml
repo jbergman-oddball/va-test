@@ -13,6 +13,9 @@ DISABLE:
   - TYPESCRIPT  # Disables all TypeScript linters
   - JSX         # Disables linters for JSX files (used by React)
   - TSX         # Disables linters for TSX files (used by React with TypeScript)
+  - BASH
+  - SPELL
+  - COPYPASTE
 
 # Exclude specific directories from all linting.
 # This uses a regular expression to match directory paths.
