@@ -46,8 +46,6 @@ jobs:
         uses: oxsecurity/megalinter/flavors/cupcake@v8.8.0
         env:
           MEGALINTER_CONFIG: ../linters/.mega-linter.yml
-          YAML_YAMLLINT_CONFIG_FILE: ../linters/.yamllint.yml
-          ACTION_ACTIONLINT_CONFIG_FILE: ../linters/.actionlint.yml
           ACTION_ACTIONLINT_ARGUMENTS: -shellcheck= -pyflakes=
           VALIDATE_ALL_CODEBASE: true
           # VALIDATE_ALL_CODEBASE: ${{ github.event_name == 'push' && github.ref == 'refs/heads/main' }} # Validates all source when push on main, else just the git diff with main. Override with true if you always want to lint all sources
