@@ -21,3 +21,7 @@ DISABLE:
 
 FILTER_REGEX_EXCLUDE:
   - "test-code/"
+
+ACTION_ACTIONLINT:
+  Disable_RULES:
+    - action
