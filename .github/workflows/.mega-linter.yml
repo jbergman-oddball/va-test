@@ -1,0 +1,25 @@
+ MegaLinter Configuration File
+# -----------------------------
+# This file disables all linters for Python, JavaScript, TypeScript, JSX, and TSX.
+# This effectively turns off linting for Python and React projects.
+#
+# For more configuration options, visit the MegaLinter documentation:
+# https://megalinter.io/latest/configuration/
+
+# Use the DISABLE key to specify entire groups (descriptors) of linters to turn off.
+DISABLE:
+  - PYTHON      # Disables all Python linters (ruff, pylint, black, etc.)
+  - JAVASCRIPT  # Disables all JavaScript linters (eslint, prettier, etc.)
+  - TYPESCRIPT  # Disables all TypeScript linters
+  - JSX         # Disables linters for JSX files (used by React)
+  - TSX         # Disables linters for TSX files (used by React with TypeScript)
+
+# Exclude specific directories from all linting.
+# This uses a regular expression to match directory paths.
+FILTER_REGEX_EXCLUDE:
+  - 'test-code/' # Exclude any directory named "test code"
+
+# You can add other MegaLinter configurations below this line if needed.
+# For example, to apply fixes automatically for the linters that ARE enabled:
+# APPLY_FIXES: all
+
