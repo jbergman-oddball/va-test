@@ -13,16 +13,11 @@ DISABLE:
   - TYPESCRIPT  # Disables all TypeScript linters
   - JSX         # Disables linters for JSX files (used by React)
   - TSX         # Disables linters for TSX files (used by React with TypeScript)
-  - BASH
-  - SPELL
-  - COPYPASTE
+  - BASH        # Disables linters related to bash
+  - SPELL       # disables spelling
+   #TODO: What is this?
+  - COPYPASTE   # disables copy/paste 
 
-# Exclude specific directories from all linting.
-# This uses a regular expression to match directory paths.
 FILTER_REGEX_EXCLUDE:
-  - 'test-code/' # Exclude any directory named "test code"
-
-# You can add other MegaLinter configurations below this line if needed.
-# For example, to apply fixes automatically for the linters that ARE enabled:
-# APPLY_FIXES: all
+  - 'test-code/' 
 
