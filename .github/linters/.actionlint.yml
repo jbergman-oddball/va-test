@@ -3,7 +3,7 @@ disable:
   - "glob-double-quotes"
   - "unrecognized-event"
   - "shellcheck"
-  - "action-version"
+  - "action"
   - "syntax-check"
 
 ignore:
