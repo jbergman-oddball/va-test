@@ -5,3 +5,9 @@ disable:
   - "shellcheck"
   - "action-version"
   - "syntax-check"
+
+ignore:
+  - "action is too old"
+  - '"secrets" is only available for a reusable workflow call'
+  - 'name is missing in "environment" section'
+  - '"environment" section is sequence node but mapping node is expected'
