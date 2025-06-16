@@ -25,6 +25,9 @@ FILTER_REGEX_EXCLUDE:
 ACTION_ACTIONLINT:
   Disable_RULES:
     - action
+  ARGUMENTS:
+    - -shellcheck=
+    - -pyflakes=
 
 YAML_YAMLLINT:
   CONFIG_FILE: |
