@@ -1,0 +1,3 @@
+disable:
+  - "uses-latest-version"
+  - "glob-double-quotes"
