@@ -20,7 +20,7 @@ jobs:
       - name: Run yamllint
         uses: ibiqlik/action-yamllint@v3
         with:
-          config_file: .github/linters/.yamllint.yml
+          config_file: .github/.yamllint.yml
 
       - name: Run actionlint
         run: |
