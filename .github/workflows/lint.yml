@@ -23,4 +23,7 @@ jobs:
           config_file: .github/.yamllint.yml
 
       - name: Run actionlint
-        uses: rhysd/actionlint@v1.7.7
+        uses: docker://rhysd/actionlint:latest
+        with:
+          args: -color
+          config_file: .github/.actionlint.yml
