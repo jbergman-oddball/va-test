@@ -25,4 +25,4 @@ jobs:
       - name: Run actionlint
         uses: docker://rhysd/actionlint:latest
         with:
-          args: -color
+          args: -color -ignore 'action is too old to run'
