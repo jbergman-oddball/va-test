@@ -23,7 +23,7 @@ jobs:
           config_file: .github/linters/.yamllint.yml
 
       - name: Run actionlint
-        uses: rhysd/actionlint@v1
-        with:
-          # This action automatically finds the .actionlint.yml file
-          config_file: .github/linters/.actionlint.yml
+        run: |
+          bash <(curl https://raw.githubusercontent.com/rhysd/actionlint/main/scripts/download-actionlint.bash)
+          ./actionlint -color
+        shell: bash
