@@ -23,7 +23,7 @@ jobs:
           config_file: .github/linters/.yamllint.yml
 
       - name: Run actionlint
-        uses: rhysd/actionlint-github@v1
+        uses: rhysd/actionlint@v1
         with:
           # This action automatically finds the .actionlint.yml file
           config_file: .github/linters/.actionlint.yml
