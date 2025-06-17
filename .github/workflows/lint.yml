@@ -25,5 +25,5 @@ jobs:
       - name: Run actionlint
         run: |
           bash <(curl https://raw.githubusercontent.com/rhysd/actionlint/main/scripts/download-actionlint.bash)
-          ./actionlint -config-file .github/linters/.actionlint.yml -color .github/workflows/
+          ./actionlint -config-file .github/linters/.actionlint.yml -color .github/workflows/*.yml
         shell: bash
