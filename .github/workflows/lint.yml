@@ -23,7 +23,4 @@ jobs:
           config_file: .github/.yamllint.yml
 
       - name: Run actionlint
-        run: |
-          bash <(curl https://raw.githubusercontent.com/rhysd/actionlint/main/scripts/download-actionlint.bash)
-          ./actionlint -color .github/workflows/*.yml
-        shell: bash
+        uses: rhysd/actionlint@v1
