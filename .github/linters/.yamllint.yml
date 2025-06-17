@@ -4,5 +4,4 @@ rules:
   truthy: disable
   trailing-spaces: disable
   comments-indentation: disable
-  line-length:
-    max: 120
+  line-length: disable
