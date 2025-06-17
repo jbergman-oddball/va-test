@@ -24,9 +24,6 @@ jobs:
 
       - name: Run actionlint
         run: |
-          echo "Current dir: $(pwd)"
-          ls -la .github/linters
-          cat .github/linters/.actionlint.yml
           bash <(curl https://raw.githubusercontent.com/rhysd/actionlint/main/scripts/download-actionlint.bash)
           ./actionlint -config-file .github/linters/.actionlint.yml -color .github/workflows/*.yml
         shell: bash
