@@ -26,4 +26,3 @@ jobs:
         uses: docker://rhysd/actionlint:latest
         with:
           args: -color
-          config_file: .github/.actionlint.yml
